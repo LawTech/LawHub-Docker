@@ -4,8 +4,13 @@ steps:
   build_step_docker:
     type: build
     description: Build LawHub Server
+<<<<<<< HEAD
     image_name: lawhub-docker
     dockerfile: \11.0\apache\Dockerfile
+=======
+    image_name: lawhub/docker
+    dockerfile: Dockerfile-Test
+>>>>>>> origin/master
     tag: ${{CF_SHORT_REVISION}}
 
   push_nextcloud_to_aws_ecr:
