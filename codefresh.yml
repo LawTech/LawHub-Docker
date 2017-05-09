@@ -1,0 +1,28 @@
+version: '1.0'
+
+steps:
+  build_step_api:
+    type: build
+    description: Build LawHub Server
+    image_name: lawhub/docker
+    dockerfile: Dockerfile
+    tag: ${{CF_SHORT_REVISION}}
+
+  push_nextcloud_to_aws_ecr:
+    type: push
+    description: Push latest NextCloud image to server
+    candidate: ${{build_step_api}}
+    tag: 1.0.0-${{CF_SHORT_REVISION}}
+    provider: 'ecr'
+    registry: ${{AWS_REGISTRY}}/lawhub/docker
+    accessKeyId: ${{AWS_ACCESS_KEY}}
+    secretAccessKey: ${{AWS_SECRET_KEY}}
+    region: ${{AWS_REGION}}
+
+  deploy_nextcloud_to_ecs:
+    image: codefresh/cf-deploy-ecs
+    commands:
+      - cfecs-update --timeout 1200 -i ${{AWS_REGISTRY}}/lawhub/docker -t 1.0.0-${{CF_SHORT_REVISION}} ${{AWS_REGION}} ${{ECS_CLUSTER}} ${{ECS_LAWHUB}}
+    environment:
+      - AWS_ACCESS_KEY_ID=${{AWS_ACCESS_KEY}}
+      - AWS_SECRET_ACCESS_KEY=${{AWS_SECRET_KEY}}
