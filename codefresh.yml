@@ -5,7 +5,7 @@ steps:
     type: build
     description: Build LawHub ECS with latest NextCloud Docker
     image_name: lawhub/nextcloud
-    dockerfile: \11.0\apache\Dockerfile
+    dockerfile: 11.0/apache/Dockerfile
     tag: ${{CF_SHORT_REVISION}}
 
   push_nextcloud_to_aws_ecr:
